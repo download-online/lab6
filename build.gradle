@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+}
+
+group 'ru.jefremov.prog'
+version ''
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+}
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    manifest {
+        attributes(
+                'Main-Class': 'ru.jefremov.prog.Main'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task fatJarServer(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'ru.jefremov.prog.server.MainServer'
+    }
+    baseName = 'server'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+}
+
+task fatJarClient(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'ru.jefremov.prog.client.MainClient'
+    }
+    baseName = 'client'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'

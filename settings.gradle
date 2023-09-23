@@ -1,0 +1,3 @@
+rootProject.name = 'sechstlabor'
+
+include 'common', 'server', 'client'
